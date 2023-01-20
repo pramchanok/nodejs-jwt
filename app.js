@@ -12,7 +12,8 @@ process.env.TZ  = 'Asia/Bangkok'
 const Role      = db.role; */
 
 var corsOptions = {
-  origin: "http://localhost:8081"
+  origin: "http://localhost:3000",
+  credentials: true,
 };
 
 app.use((req, res, next) => {

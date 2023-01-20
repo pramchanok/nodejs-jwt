@@ -1,7 +1,8 @@
 const { authJwt } = require("../middleware");
-const controller = require("../controllers/posts.controller");
+const { getAllposts } = require("../controllers/posts.controller");
 
 module.exports = function(app) {
+
   app.use(function(req, res, next) {
     res.header(
       "Access-Control-Allow-Headers",
@@ -9,7 +10,17 @@ module.exports = function(app) {
     );
     next();
   });
-  
-  app.get("/api/posts",  controller.index); //[authJwt.verifyToken],
+
+  //app.get("/api/posts",  controller.index); //[authJwt.verifyToken],
+
+  app.get('/api/posts', async (req, res, next)=>{
+    try {
+        const allpost = await getAllposts();
+        res.status(200).json({data: allpost});
+    } catch(e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+ });
 
 };

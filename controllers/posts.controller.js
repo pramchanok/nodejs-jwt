@@ -1,16 +1,14 @@
-const db    = require("../models");
-const Posts = db.posts;
+const db      = require("../models");
+const Posts   = db.posts;
 const authors = db.authors;
-const Op    = db.Sequelize.Op;
+const Op      = db.Sequelize.Op;
 
-/* const dd = async () => {
-  const employees = await authors.findAll();
-  console.log(employees);
+const getAllposts = async () => {
+  const result = await Posts.findAll();
+  return result
 }
 
-dd() */
-
-exports.index = async (req, res) => {
+/* exports.index = async (req, res) => {
   const title = req.query.title;
   var condition = title ? { title: { [Op.like]: `%${title}%` } } : null;
   Posts.findAll({ where: condition })
@@ -23,4 +21,8 @@ exports.index = async (req, res) => {
           err.message || "Some error occurred while retrieving tutorials.",
       });
     });
+}; */
+
+module.exports = {
+  getAllposts
 };
