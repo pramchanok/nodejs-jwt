@@ -1,9 +1,9 @@
 const { authJwt } = require("../middleware");
 const { getAllposts } = require("../controllers/posts.controller");
 
-module.exports = function(app) {
+module.exports = (app) => {
 
-  app.use(function(req, res, next) {
+  app.use((req, res, next) => {
     res.header(
       "Access-Control-Allow-Headers",
       "x-access-token, Origin, Content-Type, Accept"
@@ -11,12 +11,14 @@ module.exports = function(app) {
     next();
   });
 
-  //app.get("/api/posts",  controller.index); //[authJwt.verifyToken],
+  //app.use([authJwt.verifyToken]); //all route verify token
+  //app.get([authJwt.verifyToken], "/api/posts",  controller.index);  //single route verify token
 
-  app.get('/api/posts', async (req, res, next)=>{
+  app.route('/api/posts/?')
+  .get(async (req, res, next)=>{
     try {
         const allpost = await getAllposts();
-        res.status(200).json({data: allpost});
+        res.status(200).json(allpost);
     } catch(e) {
         console.log(e);
         res.sendStatus(500);
