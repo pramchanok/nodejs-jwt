@@ -30,7 +30,11 @@ const sequelize = new Sequelize(config.DB, config.USER, config.PASSWORD, {
     acquire: config.pool.acquire,
     idle: config.pool.idle,
   },
-  operatorsAliases: 0
+  operatorsAliases: 0,
+  dialectOptions: {
+    useUTC: false,
+  },
+  timezone: '+07:00'
 });
 
 const db = {};

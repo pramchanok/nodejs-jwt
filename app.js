@@ -1,5 +1,6 @@
 const express     = require("express");
 const cors        = require("cors");
+const time        = require("express-timestamp");
 const db          = require('./config/db.config');
 const app         = express();
 const sequelize   = db.sequelize;
@@ -29,6 +30,7 @@ app.use(express.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 
+app.use(time.init)
 
 /* sequelize.authenticate()
 .then(() => {

@@ -8,6 +8,19 @@ const getAllposts = async () => {
   return result
 }
 
+const insertPosts = async (obj) => {
+  await Posts.create(obj);
+}
+
+const getOnePosts = async (id) => {
+  const OnePost = await Posts.findByPk(id);
+  return OnePost;
+}
+
+const updatePosts = async (obj, id) => {
+  await Posts.update(obj, { where: {id: id}});
+}
+
 /* exports.index = async (req, res) => {
   const title = req.query.title;
   var condition = title ? { title: { [Op.like]: `%${title}%` } } : null;
@@ -24,5 +37,8 @@ const getAllposts = async () => {
 }; */
 
 module.exports = {
-  getAllposts
+  getAllposts,
+  insertPosts,
+  getOnePosts,
+  updatePosts
 };
