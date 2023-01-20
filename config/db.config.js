@@ -22,7 +22,13 @@ const config = {
 const sequelize = new Sequelize(config.DB, config.USER, config.PASSWORD, {
   host: config.HOST,
   dialect: config.dialect,
-  operatorsAliases: false,
+  operatorsAliases: 0,
+  timezone: '+07:00',
+  charset: 'utf8',
+  collate: 'utf8_general_ci',
+  query: {
+    raw: true
+  },
   logging: false,
   pool: {
     max: config.pool.max,
@@ -30,11 +36,12 @@ const sequelize = new Sequelize(config.DB, config.USER, config.PASSWORD, {
     acquire: config.pool.acquire,
     idle: config.pool.idle,
   },
-  operatorsAliases: 0,
   dialectOptions: {
-    useUTC: false,
+    //useUTC: false,
+    timezone: "local",
+    dateStrings: true,
+    typeCast: true
   },
-  timezone: '+07:00'
 });
 
 const db = {};

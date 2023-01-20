@@ -90,9 +90,9 @@ module.exports = (app) => {
           author_id   : req.body.author_id,
           title       : req.body.title,
           description : req.body.description,
-          content     : req.body.content,
+          content     : req.body.content
         }
-        
+  
         const updatepost =  await updatePosts(obj, req.params.id).then(()=>{return getOnePosts(req.params.id);});
         res.status(200).json(updatepost);
            

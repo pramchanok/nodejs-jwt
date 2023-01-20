@@ -21,9 +21,9 @@ module.exports = (sequelize, Sequelize) => {
         allowNull: false,
       },
       updatedAt: {
-        type: Sequelize.DATE,
+        type: Sequelize.DATE(6),
         allowNull: false,
-      },
+      }
     });
   
     return posts;
