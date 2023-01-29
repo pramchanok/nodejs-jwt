@@ -2,7 +2,6 @@ const { authJwt } = require("../middleware");
 const { getAllposts, insertPosts, getOnePosts, updatePosts } = require("../controllers/posts.controller");
 const { body, check, validationResult } = require("express-validator");
 
-//console.log();
 
 module.exports = (app) => {
 
@@ -18,8 +17,7 @@ module.exports = (app) => {
   //app.get([authJwt.verifyToken], "/api/posts",  controller.index);  //single route verify token
 
   app.route('/api/posts/?')
-    .get(async (req, res, next)=>{
-      //const uid = await authJwt.isId.call()
+    .get(authJwt.verifyToken, async (req, res, next)=>{
       try {
           const allpost = await getAllposts();
           if(allpost.length > 0) res.status(200).json(allpost);
@@ -44,7 +42,7 @@ module.exports = (app) => {
       try {
 
         let obj = {
-          author_id   : req.body.author_id,
+          author_id   : req.userId,
           title       : req.body.title,
           description : req.body.description,
           content     : req.body.content,
@@ -97,12 +95,19 @@ module.exports = (app) => {
           content     : req.body.content
         }
   
-        const updatepost =  await updatePosts(obj, req.params.id).then(()=>{return getOnePosts(req.params.id);});
+        const updatepost =  await updatePosts(obj, req.userId).then(()=>{return getOnePosts(req.userId);});
         res.status(200).json(updatepost);
            
       } catch(e) {
           console.log(e);
           res.sendStatus(400);
+      }
+   })
+   .delete( [authJwt.verifyToken], async (req, res, next) => {
+      try {
+
+      } catch(e){
+        
       }
    })
 }

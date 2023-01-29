@@ -5,7 +5,7 @@ const User  = db.user;
 require('dotenv').config()
 
 verifyToken = (req, res, next) => {
-  let token = req.headers["x-access-token"];
+  let token = req.body.token || req.query.token || req.headers["x-access-token"];
 
   if (!token) {
     return res.status(403).send({
@@ -81,18 +81,11 @@ isModeratorOrAdmin = (req, res, next) => {
   });
 };
 
-isId = (req, res, next) => {
-  console.log(req.userId);
-  //let id = await User.findByPk(req.userId) //, { attributes: { exclude: ['id'] } } 
- // return id;
-}
-
 const authJwt = {
   verifyToken: verifyToken,
   isAdmin: isAdmin,
   isModerator: isModerator,
-  isModeratorOrAdmin: isModeratorOrAdmin,
-  isId: isId
+  isModeratorOrAdmin: isModeratorOrAdmin
 };
 
 module.exports = authJwt;
