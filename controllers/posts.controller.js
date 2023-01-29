@@ -1,15 +1,18 @@
 const db      = require("../models");
 const Posts   = db.posts;
-const authors = db.authors;
+const User    = db.user;
 const Op      = db.Sequelize.Op;
 
 const getAllposts = async () => {
-  const result = await Posts.findAll();
+  const result = await Posts.findAll({
+    include: [ { model: User, attributes: ["id","username","name","email"] } ]
+  });
   return result
 }
 
 const insertPosts = async (obj) => {
-  await Posts.create(obj);
+  let data = await Posts.create(obj);
+  console.log(data.dataValues);
 }
 
 const getOnePosts = async (id) => {
@@ -18,6 +21,10 @@ const getOnePosts = async (id) => {
 }
 
 const updatePosts = async (obj, id) => {
+  await Posts.update(obj, { where: {id: id}});
+}
+
+const deletePosts = async (obj, id) => {
   await Posts.update(obj, { where: {id: id}});
 }
 

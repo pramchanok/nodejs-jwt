@@ -81,10 +81,18 @@ isModeratorOrAdmin = (req, res, next) => {
   });
 };
 
+isId = (req, res, next) => {
+  console.log(req.userId);
+  //let id = await User.findByPk(req.userId) //, { attributes: { exclude: ['id'] } } 
+ // return id;
+}
+
 const authJwt = {
   verifyToken: verifyToken,
   isAdmin: isAdmin,
   isModerator: isModerator,
-  isModeratorOrAdmin: isModeratorOrAdmin
+  isModeratorOrAdmin: isModeratorOrAdmin,
+  isId: isId
 };
+
 module.exports = authJwt;

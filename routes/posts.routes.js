@@ -2,6 +2,8 @@ const { authJwt } = require("../middleware");
 const { getAllposts, insertPosts, getOnePosts, updatePosts } = require("../controllers/posts.controller");
 const { body, check, validationResult } = require("express-validator");
 
+//console.log();
+
 module.exports = (app) => {
 
   app.use((req, res, next) => {
@@ -17,15 +19,17 @@ module.exports = (app) => {
 
   app.route('/api/posts/?')
     .get(async (req, res, next)=>{
+      //const uid = await authJwt.isId.call()
       try {
           const allpost = await getAllposts();
-          res.status(200).json(allpost);
+          if(allpost.length > 0) res.status(200).json(allpost);
+          else res.status(200).json("data not found");
       } catch(e) {
           console.log(e);
           res.sendStatus(500);
       }
     })
-    .post([
+    .post([authJwt.verifyToken], [
       check('author_id', 'Author is not valid').not().isEmpty(),
       check('title', 'Title field is required').not().isEmpty(),
       check('description', 'Description field is required').not().isEmpty(),
@@ -34,7 +38,7 @@ module.exports = (app) => {
 
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+        return res.status(400).send({ errors: errors.array() });
       }
 
       try {
@@ -52,7 +56,7 @@ module.exports = (app) => {
 
       } catch(e){
         console.log(e);
-        res.sendStatus(400);
+        res.sendStatus(400).send({massages: e});
       }
     })
 
@@ -74,16 +78,16 @@ module.exports = (app) => {
       }
     })
     .get((req, res, next) => {
-      const result = {
+      /*const result = {
         status: 200,
         data: res.onepost,
-      };
+      }; */
       return res
         .header("Content-Type", "application/json")
         .status(200)
-        .json(result);
+        .json(res.onepost);
     })
-    .put( async (req, res, next) => {
+    .put( [authJwt.verifyToken], async (req, res, next) => {
 
       try {
         let obj = {

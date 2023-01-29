@@ -15,6 +15,13 @@ db.user.belongsToMany(db.role, {
   otherKey: "roleId"
 });
 
+db.user.hasMany(db.posts, {
+  foreignKey: 'author_id'
+});
+db.posts.belongsTo(db.user, {
+  foreignKey: 'author_id'
+})
+
 db.ROLES = ["user", "admin", "moderator"];
 
 db.sequelize.sync(err => {
