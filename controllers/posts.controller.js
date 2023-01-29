@@ -27,11 +27,11 @@ const getOnePosts = async (id) => {
   return OnePost;
 }
 
-const updatePosts = async (obj, id) => {
+const updatePosts = async (obj, id, uid) => {
   let transaction
-  try {
+  try { 
     transaction = await db.sequelize.transaction()
-    await Posts.update(obj, { where: {id: id}});
+    await Posts.update(obj, { where: { [Op.and]: [ { id: id }, { author_id: uid } ] } });
     await transaction.commit();
   } catch(e) {
     if (transaction) await transaction.rollback();
@@ -40,7 +40,7 @@ const updatePosts = async (obj, id) => {
     
 }
 
-const deletePosts = async (obj, id) => {
+const deletePosts = async (id) => {
   let transaction
   try {
     transaction = await db.sequelize.transaction()
@@ -70,5 +70,6 @@ module.exports = {
   getAllposts,
   insertPosts,
   getOnePosts,
-  updatePosts
+  updatePosts,
+  deletePosts
 };

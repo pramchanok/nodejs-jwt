@@ -1,5 +1,5 @@
 const { authJwt } = require("../middleware");
-const { getAllposts, insertPosts, getOnePosts, updatePosts } = require("../controllers/posts.controller");
+const { getAllposts, insertPosts, getOnePosts, updatePosts, deletePosts } = require("../controllers/posts.controller");
 const { body, check, validationResult } = require("express-validator");
 
 
@@ -95,7 +95,7 @@ module.exports = (app) => {
           content     : req.body.content
         }
   
-        const updatepost =  await updatePosts(obj, req.userId).then(()=>{return getOnePosts(req.userId);});
+        const updatepost =  await updatePosts(obj, req.params.id, req.userId).then(()=>{return getOnePosts(req.params.id);});
         res.status(200).json(updatepost);
            
       } catch(e) {
@@ -103,11 +103,23 @@ module.exports = (app) => {
           res.sendStatus(400);
       }
    })
-   .delete( [authJwt.verifyToken], async (req, res, next) => {
-      try {
+  .delete( [authJwt.verifyToken] , [check('id', 'Not found post').not().isEmpty()], async (req, res, next) => {
 
-      } catch(e){
-        
-      }
-   })
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).send({ errors: errors.array() });
+    }
+
+    try {
+
+      await deletePosts(req.params.id);
+      res.status(200).send({massages: "Deleted Post Successfuly!"});
+
+    } catch(e){
+
+      console.log(e);
+      res.sendStatus(400);
+
+    }
+  })
 }
