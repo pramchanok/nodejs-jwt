@@ -11,8 +11,15 @@ const getAllposts = async () => {
 }
 
 const insertPosts = async (obj) => {
-  let data = await Posts.create(obj);
-  console.log(data.dataValues);
+  let transaction
+  try {
+    transaction = await db.sequelize.transaction()
+    await Posts.create(obj, { transaction }); //let data    = 
+    await transaction.commit();
+  } catch(error) {
+    if (transaction) await transaction.rollback();
+  }
+  //console.log(data.dataValues);
 }
 
 const getOnePosts = async (id) => {
@@ -21,11 +28,27 @@ const getOnePosts = async (id) => {
 }
 
 const updatePosts = async (obj, id) => {
-  await Posts.update(obj, { where: {id: id}});
+  let transaction
+  try {
+    transaction = await db.sequelize.transaction()
+    await Posts.update(obj, { where: {id: id}});
+    await transaction.commit();
+  } catch(e) {
+    if (transaction) await transaction.rollback();
+    throw Error(error);
+  }
+    
 }
 
 const deletePosts = async (obj, id) => {
-  await Posts.update(obj, { where: {id: id}});
+  let transaction
+  try {
+    transaction = await db.sequelize.transaction()
+    await Posts.destroy({ where: { id: id } });
+    await transaction.commit();
+  } catch(e){
+    if (transaction) await transaction.rollback();
+  }
 }
 
 /* exports.index = async (req, res) => {

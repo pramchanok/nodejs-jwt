@@ -17,7 +17,7 @@ module.exports = (app) => {
   //app.get([authJwt.verifyToken], "/api/posts",  controller.index);  //single route verify token
 
   app.route('/api/posts/?')
-    .get(authJwt.verifyToken, async (req, res, next)=>{
+    .get(async (req, res, next)=>{
       try {
           const allpost = await getAllposts();
           if(allpost.length > 0) res.status(200).json(allpost);
@@ -28,7 +28,7 @@ module.exports = (app) => {
       }
     })
     .post([authJwt.verifyToken], [
-      check('author_id', 'Author is not valid').not().isEmpty(),
+      //check('author_id', 'Author is not valid').not().isEmpty(),
       check('title', 'Title field is required').not().isEmpty(),
       check('description', 'Description field is required').not().isEmpty(),
       check('content', 'Content field is required').not().isEmpty(),
@@ -38,11 +38,11 @@ module.exports = (app) => {
       if (!errors.isEmpty()) {
         return res.status(400).send({ errors: errors.array() });
       }
-
+      
       try {
 
         let obj = {
-          author_id   : req.userId,
+          author_id   : req.userId, // Middleware authjwt
           title       : req.body.title,
           description : req.body.description,
           content     : req.body.content,
@@ -50,7 +50,7 @@ module.exports = (app) => {
           updatedAt   : req.timestamp.format()
         }
 
-        const posstinsert =  await insertPosts(obj).then(() => res.status(200).json({ message: 'Posts created.' }));
+        await insertPosts(obj).then(() => res.status(200).json({ message: 'Posts created.' }));
 
       } catch(e){
         console.log(e);
@@ -89,7 +89,7 @@ module.exports = (app) => {
 
       try {
         let obj = {
-          author_id   : req.body.author_id,
+          //author_id   : req.body.author_id,
           title       : req.body.title,
           description : req.body.description,
           content     : req.body.content
