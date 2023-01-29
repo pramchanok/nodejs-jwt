@@ -26,10 +26,10 @@ const sequelize = new Sequelize(config.DB, config.USER, config.PASSWORD, {
   timezone: '+07:00',
   charset: 'utf8',
   collate: 'utf8_general_ci',
-  query: {
+  /* query: {
     raw: true
-  },
-  logging: false,
+  }, */
+  logging: 0,
   pool: {
     max: config.pool.max,
     min: config.pool.min,
@@ -39,8 +39,8 @@ const sequelize = new Sequelize(config.DB, config.USER, config.PASSWORD, {
   dialectOptions: {
     //useUTC: false,
     timezone: "local",
-    dateStrings: true,
-    typeCast: true
+    dateStrings: 1,
+    typeCast: 1
   },
 });
 

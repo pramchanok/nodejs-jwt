@@ -1,28 +1,30 @@
 const express     = require("express");
 const cors        = require("cors");
 const time        = require("express-timestamp");
-const db          = require('./config/db.config');
+//const db          = require('./config/db.config');
 const app         = express();
-const sequelize   = db.sequelize;
+//const sequelize   = db.sequelize;
 
 require('dotenv').config()
 
 process.env.TZ  = 'Asia/Bangkok'
 
-/* const db        = require("./models");
-const Role      = db.role; */
+//const db        = require("./models");
+//const Role      = db.role;
 
 var corsOptions = {
   origin: "http://localhost:3000",
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+  allowedHeaders: "Origin, X-Requested-With, x-access-token, role, Content, Accept, Content-Type, Authorization",
   credentials: true,
 };
+
+app.use(cors(corsOptions));
 
 app.use((req, res, next) => {
   res.removeHeader("X-Powered-By");
   next();
 });
-
-app.use(cors(corsOptions));
 
 // parse requests of content-type - application/json
 app.use(express.json());

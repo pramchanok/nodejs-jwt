@@ -1,12 +1,9 @@
-const db = require("../models");
-const config = require("../config/auth.config");
-const User = db.user;
-const Role = db.role;
-
-const Op = db.Sequelize.Op;
-
-var jwt = require("jsonwebtoken");
-var bcrypt = require("bcryptjs");
+const db      = require("../models");
+const jwt     = require("jsonwebtoken");
+const bcrypt  = require("bcryptjs");
+const User    = db.user;
+const Role    = db.role;
+const Op      = db.Sequelize.Op;
 
 require('dotenv').config()
 
@@ -23,6 +20,7 @@ exports.signup = (req, res) => {
     .then(user => {
       if (req.body.roles) {
         Role.findAll({
+          //attributes: ['id'],
           where: {
             name: {
               [Op.or]: req.body.roles
@@ -31,6 +29,8 @@ exports.signup = (req, res) => {
         }).then(roles => {
           user.setRoles(roles).then(() => {
             res.send({ message: "User was registered successfully!" });
+          }).catch(err => {
+            res.status(500).send("Error -> " + err);
           });
         });
       } else {
@@ -46,7 +46,6 @@ exports.signup = (req, res) => {
 };
 
 exports.signin = (req, res) => {
-  console.log(req.body);
   User.findOne({
     where: {
       username: req.body.username
@@ -89,6 +88,6 @@ exports.signin = (req, res) => {
       });
     })
     .catch(err => {
-      res.status(500).send({ message: err.message });
+      res.status(401).send({ message: err.message });
     });
 };
